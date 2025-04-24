@@ -55,7 +55,7 @@ USER_DATA_DIR = "%s_user_data_dir"  # %s will be replaced by platform name
 START_PAGE = 1
 
 # 爬取视频/帖子的数量控制
-CRAWLER_MAX_NOTES_COUNT = 200
+CRAWLER_MAX_NOTES_COUNT = 2
 
 # 并发爬虫数量控制
 MAX_CONCURRENCY_NUM = 1
@@ -64,7 +64,7 @@ MAX_CONCURRENCY_NUM = 1
 ENABLE_GET_IMAGES = False
 
 # 是否开启爬评论模式, 默认开启爬评论
-ENABLE_GET_COMMENTS = True
+ENABLE_GET_COMMENTS = False
 
 # 爬取一级评论的数量控制(单视频/帖子)
 CRAWLER_MAX_COMMENTS_COUNT_SINGLENOTES = 10
@@ -179,10 +179,10 @@ CUSTOM_WORDS = {
 }
 
 # 停用(禁用)词文件路径
-STOP_WORDS_FILE = "./docs/hit_stopwords.txt"
+STOP_WORDS_FILE = "./external/MediaCrawler/docs/hit_stopwords.txt"
 
 # 中文字体文件路径
-FONT_PATH = "./docs/STZHONGS.TTF"
+FONT_PATH = "./external/MediaCrawler/docs/STZHONGS.TTF"
 
 # 爬取开始的天数，仅支持 bilibili 关键字搜索，YYYY-MM-DD 格式，若为 None 则表示不设置时间范围，按照默认关键字最多返回 1000 条视频的结果处理
 START_DAY = '2024-01-01'
