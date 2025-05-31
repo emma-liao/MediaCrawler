@@ -179,10 +179,10 @@ CUSTOM_WORDS = {
 }
 
 # 停用(禁用)词文件路径
-STOP_WORDS_FILE = "./external/MediaCrawler/docs/hit_stopwords.txt"
+STOP_WORDS_FILE = "./app/external/MediaCrawler/docs/hit_stopwords.txt"
 
 # 中文字体文件路径
-FONT_PATH = "./external/MediaCrawler/docs/STZHONGS.TTF"
+FONT_PATH = "./app/external/MediaCrawler/docs/STZHONGS.TTF"
 
 # 爬取开始的天数，仅支持 bilibili 关键字搜索，YYYY-MM-DD 格式，若为 None 则表示不设置时间范围，按照默认关键字最多返回 1000 条视频的结果处理
 START_DAY = '2024-01-01'
