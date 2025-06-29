@@ -45,7 +45,11 @@ class XiaoHongShuCrawler(AbstractCrawler):
         # self.user_agent = utils.get_user_agent()
         self.user_agent = config.UA if config.UA else "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
 
-    async def start(self) -> None:
+    # 原代码，将搜索结果存储为json等
+    # async def start(self) -> None:
+    # 修改代码：将搜索结果返回
+    async def start(self) -> Optional[List[Dict]]:  # 添加返回类型
+    # End
         playwright_proxy_format, httpx_proxy_format = None, None
         if config.ENABLE_IP_PROXY:
             ip_proxy_pool = await create_ip_pool(
@@ -93,10 +97,15 @@ class XiaoHongShuCrawler(AbstractCrawler):
                     browser_context=self.browser_context
                 )
 
+            search_response = None  # 添加代码：返回执行结果列表，并使用不同的变量名
             crawler_type_var.set(config.CRAWLER_TYPE)
             if config.CRAWLER_TYPE == "search":
                 # Search for notes and retrieve their comment information.
-                await self.search()
+                # 原代码
+                # await self.search()
+                # 修改代码：将搜索结果返回
+                search_response = await self.search()
+                # End
             elif config.CRAWLER_TYPE == "detail":
                 # Get the information and comments of the specified post
                 await self.get_specified_notes()
@@ -107,8 +116,14 @@ class XiaoHongShuCrawler(AbstractCrawler):
                 pass
 
             utils.logger.info("[XiaoHongShuCrawler.start] Xhs Crawler finished ...")
+            return search_response  # 添加代码：返回执行结果
 
-    async def search(self) -> None:
+    # 原代码，将搜索结果存储为json等
+    # async def search(self) -> None:
+    # 修改代码：将搜索结果返回
+    async def search(self) -> List[Dict]:
+        search_results = []  # 初始化搜索结果列表
+    # End
         """Search for notes and retrieve their comment information."""
         utils.logger.info(
             "[XiaoHongShuCrawler.search] Begin search xiaohongshu keywords"
@@ -168,10 +183,24 @@ class XiaoHongShuCrawler(AbstractCrawler):
                     note_details = await asyncio.gather(*task_list)
                     for note_detail in note_details:
                         if note_detail:
-                            await xhs_store.update_xhs_note(note_detail)
-                            await self.get_notice_media(note_detail)
-                            note_ids.append(note_detail.get("note_id"))
-                            xsec_tokens.append(note_detail.get("xsec_token"))
+                            # 原代码，将结果存储为json等
+                            # await xhs_store.update_xhs_note(note_detail)
+                            # await self.get_notice_media(note_detail)
+                            # note_ids.append(note_detail.get("note_id"))
+                            # xsec_tokens.append(note_detail.get("xsec_token"))
+
+                            # 修改代码：将结果添加到搜索结果列表，以显示在前端
+                            search_results.append({
+                                'id': note_detail.get('note_id'),
+                                'title': note_detail.get('title'),
+                                'desc': note_detail.get('desc'),
+                                # 'user': note_detail.get('user'),
+                                'images': note_detail.get('image_list', []),
+                                #'liked_count': note_detail.get('interact_info', {}).get('liked_count', 0),
+                                #'collected_count': note_detail.get('interact_info', {}).get('collected_count', 0)
+                            })
+                            # End
+
                     page += 1
                     utils.logger.info(
                         f"[XiaoHongShuCrawler.search] Note details: {note_details}"
@@ -182,6 +211,8 @@ class XiaoHongShuCrawler(AbstractCrawler):
                         "[XiaoHongShuCrawler.search] Get note detail error"
                     )
                     break
+        
+        return search_results  # 添加代码：返回搜索结果列表
 
     async def get_creators_and_notes(self) -> None:
         """Get creator's notes and retrieve their comment information."""
